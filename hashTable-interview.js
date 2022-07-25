@@ -1,0 +1,55 @@
+//Google Question
+//Given an array = [2,5,1,2,3,5,1,2,4]:
+//It should return 2
+
+//Given an array = [2,1,1,2,3,5,1,2,4]:
+//It should return 1
+
+//Given an array = [2,3,4,5]:
+//It should return undefined
+
+/* 1. By brute force : 2 lops: nested loops on same== O(n^2) */
+
+function firstRecurringCharacter(input) {
+  const numberOccuranc={};
+  if (input.length < 2) {
+    return undefined;
+  }
+  for (let item of input) {
+    if (numberOccuranc.hasOwnProperty(item)) {
+      return item;
+    } else {
+      numberOccuranc[item]= true;
+    }
+  }
+}
+
+
+
+
+/* firstRecurringCharacter:: O(n) */
+
+
+function firstRecurringCharacter1(input) {
+  const numberOccuranc={};
+  if (input.length < 2) {
+    return undefined;
+  }
+  for (let item of input) {
+    if (numberOccuranc.hasOwnProperty(item)) {
+      return item;
+    } else {
+      numberOccuranc[item]= true;
+    }
+  }
+}
+
+console.log(firstRecurringCharacter([2,2,4]))
+console.log(firstRecurringCharacter([]))
+
+console.log(firstRecurringCharacter([1]))
+console.log(firstRecurringCharacter([2,2]))
+
+//Bonus... What if we had this:
+// [2,5,5,2,3,5,1,2,4]
+// return 5 because the pairs are before 2,2

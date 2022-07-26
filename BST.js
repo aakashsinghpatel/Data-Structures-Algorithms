@@ -181,14 +181,14 @@ class BinarySearchTree {
 
           // Option 2: Node has 1 child - Means it is right child
         } else if (currentNode.left == null && currentNode.right != null) {
-          if(currentNode.value < parentNode.value) {
+          if (currentNode.value < parentNode.value) {
             parentNode.left = currentNode.right;
           } else {
             parentNode.right = currentNode.right;
           }
           // Option 3: Node has 1 child - Means it is left child
         } else if (currentNode.left != null && currentNode.right == null) {
-          if(currentNode.value < parentNode.value) {
+          if (currentNode.value < parentNode.value) {
             parentNode.left = currentNode.left;
           } else {
             parentNode.right = currentNode.left;
@@ -196,7 +196,7 @@ class BinarySearchTree {
 
           // Option 4: Node has both child
         } else {
-            /* Make inorder successor at place of current node*/
+          /* Make inorder successor at place of current node*/
 
           // 1. Find leftmost child // Find successor
           let leftMostParent = currentNode.right;
@@ -221,6 +221,10 @@ tree.insert(15)
 tree.insert(1)
 console.log(JSON.stringify(traverse(tree.root)))
 
+console.log(JSON.stringify(traverse_new(tree.root)))
+
+
+
 //     9
 //  4     20
 //1  6  15  170
@@ -235,3 +239,12 @@ function traverse(node) {
   return tree;
 }
 
+
+function traverse_new(root) {
+  let node = { value: root.value }
+  node['left'] = root.left ? traverse(root.left) : null;
+
+  node['right'] = root.right ? traverse(root.right) : null;
+
+  return node;
+}

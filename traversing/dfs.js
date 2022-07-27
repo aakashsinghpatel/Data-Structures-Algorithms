@@ -11,74 +11,46 @@ class BinarySearchTree {
     this.root = null;
   }
   insert(value) {
-    //Code here
     const newNode = new Node(value);
-    if (this.root == null) {
+    if (this.root === null) {
       this.root = newNode;
-      return this;
     } else {
       let currentNode = this.root;
       while (true) {
         if (value < currentNode.value) {
-          // Left Subtree
+          //Left
           if (!currentNode.left) {
             currentNode.left = newNode;
             return this;
-          } else {
-            currentNode = currentNode.left;
           }
-
+          currentNode = currentNode.left;
         } else {
-          // Right Subtree
+          //Right
           if (!currentNode.right) {
             currentNode.right = newNode;
             return this;
-          } else {
-            currentNode = currentNode.right;
           }
+          currentNode = currentNode.right;
         }
       }
     }
   }
-
   lookup(value) {
-    //Code here
-    /*  let currentNode = this.root;
-     while (true) {
-       if (!currentNode) {
-         return "Value is not found";
-       }
-       if (currentNode.value == value) {
-         return "Value Found";
-       } else {
-         if (value < currentNode.value) {
-           currentNode = currentNode.left;
-         } else {
-           currentNode = currentNode.right;
-         }
-       }
-     } */
-
     if (!this.root) {
       return false;
     }
     let currentNode = this.root;
     while (currentNode) {
-      if (currentNode.value == value) {
-        return true;
-      } else {
-        if (value < currentNode.value) {
-          currentNode = currentNode.left;
-        } else {
-          currentNode = currentNode.right;
-        }
+      if (value < currentNode.value) {
+        currentNode = currentNode.left;
+      } else if (value > currentNode.value) {
+        currentNode = currentNode.right;
+      } else if (currentNode.value === value) {
+        return currentNode;
       }
     }
-
-    return false;
+    return null
   }
-
-
   remove(value) {
     if (!this.root) {
       return false;
@@ -113,10 +85,10 @@ class BinarySearchTree {
 
           //Option 2: Right child which doesnt have a left child
         } else if (currentNode.right.left === null) {
-          currentNode.right.left = currentNode.left;
           if (parentNode === null) {
-            this.root = currentNode.right;
+            this.root = currentNode.left;
           } else {
+            currentNode.right.left = currentNode.left;
 
             //if parent > current, make right child of the left the parent
             if (currentNode.value < parentNode.value) {
@@ -158,58 +130,91 @@ class BinarySearchTree {
       }
     }
   }
-
-  remove_new(value) {
-    if (!this.root) {
-      return false;
-    }
+  BreadthFirstSearch() {
     let currentNode = this.root;
-    let parentNode = null;
-    while (currentNode) {
-      if (value < currentNode.value) {
-        parentNode = currentNode;
-        currentNode = currentNode.left;
-      } else if (value > currentNode.value) {
-        parentNode = currentNode;
-        currentNode = currentNode.right;
-      } else if (currentNode.value === value) {
-        //We have a match, get to work!
+    let list = [];
+    let queue = [];
+    queue.push(currentNode);
 
-        // Option 1: Node has No child - Means it is leaf node
-        if (currentNode.left == null && currentNode.right == null) {
-          currentNode = null;
-
-          // Option 2: Node has 1 child - Means it is right child
-        } else if (currentNode.left == null && currentNode.right != null) {
-          if (currentNode.value < parentNode.value) {
-            parentNode.left = currentNode.right;
-          } else {
-            parentNode.right = currentNode.right;
-          }
-          // Option 3: Node has 1 child - Means it is left child
-        } else if (currentNode.left != null && currentNode.right == null) {
-          if (currentNode.value < parentNode.value) {
-            parentNode.left = currentNode.left;
-          } else {
-            parentNode.right = currentNode.left;
-          }
-
-          // Option 4: Node has both child
-        } else {
-          /* Make inorder successor at place of current node*/
-
-          // 1. Find leftmost child // Find successor
-          let leftMostParent = currentNode.right;
-          // let leftMost = currentNode.right.left;
-          while (leftMostParent.left) {
-            leftMostParent = leftMostParent.left;
-          }
-        }
-        return true;
+    while (queue.length > 0) {
+      currentNode = queue.shift();
+      list.push(currentNode.value);
+      if (currentNode.left) {
+        queue.push(currentNode.left);
+      }
+      if (currentNode.right) {
+        queue.push(currentNode.right);
       }
     }
+    return list;
   }
+  BreadthFirstSearchR(queue, list) {
+    if (!queue.length) {
+      return list;
+    }
+    const currentNode = queue.shift();
+    list.push(currentNode.value);
+
+    if (currentNode.left) {
+      queue.push(currentNode.left);
+    }
+    if (currentNode.right) {
+      queue.push(currentNode.right);
+    }
+
+    return this.BreadthFirstSearchR(queue, list);
+  }
+
+  DFSPreOrder() {
+    return traversePreorder(this.root, []);
+  }
+
+  DFSPostOrder() {
+    return traversePostOrder(this.root, []);
+  }
+
+  DFSInorder() {
+    return traverseInOrder(this.root, []);
+  }
+
 }
+
+function traversePreorder(node, list) {
+  list.push(node.value);
+  if (node.left) {
+    traversePreorder(node.left, list)
+  }
+  if (node.right) {
+    traversePreorder(node.right, list)
+  }
+  return list;
+}
+
+function traversePostOrder(node, list) {
+  if (node.left) {
+    traversePostOrder(node.left, list)
+  }
+  if (node.right) {
+    traversePostOrder(node.right, list)
+  }
+  list.push(node.value);
+
+  return list;
+}
+
+function traverseInOrder(node, list) {
+  if (node.left) {
+    traverseInOrder(node.left, list)
+  }
+  list.push(node.value);
+
+  if (node.right) {
+    traverseInOrder(node.right, list)
+  }
+  return list;
+}
+
+
 
 const tree = new BinarySearchTree();
 tree.insert(9)
@@ -219,38 +224,22 @@ tree.insert(20)
 tree.insert(170)
 tree.insert(15)
 tree.insert(1)
-console.log(JSON.stringify(traverse(tree.root)))
 
-console.log(JSON.stringify(traverse_new(tree.root)))
+console.log('BFS', tree.BreadthFirstSearch());
+console.log('BFS', tree.BreadthFirstSearchR([tree.root], []))
 
-
+console.log("------------------------------");
+console.log('DFS:: Inorder', tree.DFSInorder());
+console.log('DFS:: Preorder', tree.DFSPreOrder());
+console.log('DFS:: postorder', tree.DFSPostOrder());
 
 //     9
 //  4     20
 //1  6  15  170
-
-
-/* 
-BFS: [9, 4,20,1,6,15,170]
-DFS: [9,4,1,6,20,15,170] 
-*/
-
-console.log(tree.lookup(170));
-
 
 function traverse(node) {
   const tree = { value: node.value };
   tree.left = node.left === null ? null : traverse(node.left);
   tree.right = node.right === null ? null : traverse(node.right);
   return tree;
-}
-
-
-function traverse_new(root) {
-  let node = { value: root.value }
-  node['left'] = root.left ? traverse(root.left) : null;
-
-  node['right'] = root.right ? traverse(root.right) : null;
-
-  return node;
 }

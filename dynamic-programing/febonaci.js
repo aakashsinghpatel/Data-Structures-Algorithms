@@ -41,6 +41,18 @@ console.log('calculations:', dynamicCalculation)
 
 
 
+/*  Bottom up approach*/
+
+function faboMaster(n) {
+  let answer = [0, 1];
+  for (let i = 2; i < n; i++) {
+    answer.push(answer[i - 1] + answer[i - 2]);
+  }
+  return answer.pop()
+}
+
+
+console.log(faboMaster(50))
 /*  ==============================*/
 //0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233...
 /* let calculations = 0;
